@@ -2,6 +2,7 @@ import roundround from "roundround";
 import cluster from "./cluster";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
+import config from "./../config";
 
 var clusterNumber = ["master", "slave1", "slave2"];
 
@@ -9,10 +10,10 @@ var clusterNumber = ["master", "slave1", "slave2"];
 async function signUp(req, res) {
     let conn;
     try {
-        let passWord = bcrypt.hashSync(req.body.pass, process.env.SALT);
+        let passWord = bcrypt.hashSync(req.body.pass, 8);
         let next = roundround(clusterNumber);
         conn = await cluster.getConnection(next());
-        var query = `CALL sp_createUser('${req.body.name}','${req.body.nickname}',${passWord})`;
+        var query = `CALL sp_createUser('${req.body.name}','${req.body.nickName}','${passWord}')`;
         const rows = await conn.query(query);
         if (rows.affectedRows === 0 || rows.affectedRows >= 1)
             return res.status(201).json({ code: 0, response: true });
@@ -28,14 +29,14 @@ async function signUp(req, res) {
 async function Login(req, res) {
     let conn;
     try {
-        let passWord = bcrypt.hashSync(req.body.pass, process.env.SALT);
+        let passWord = bcrypt.hashSync(req.body.pass, 8);
         let next = roundround(clusterNumber);
         conn = await cluster.getConnection(next());
-        let query = `CALL sp_Login('${req.body.user}','${passWord}')`;
+        let query = `CALL sp_Login('${req.body.nickName}','${passWord}')`;
         const rows = await conn.query(query);
         if (rows) {
-            if (bcrypt.compareSync(req.body.pass, rows[0][0].pass)) {
-                let token = jwt.sign({ username: req.body.user }, process.env.SECRET_KEY, { expiresIn: process.env.EXPIRED });
+            if (bcrypt.compareSync(req.body.pass, rows[0][0].Pass)) {
+                let token = jwt.sign({ username: req.body.user }, config.SECRET_KEY, { expiresIn: config.EXPIRED });
                 if (token) {
                     return res.status(200).json({
                         code: 0,

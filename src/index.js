@@ -2,14 +2,12 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import router from './routes/router';
+import config from './config';
 const http = require("http");
 
-import dotenv from 'dotenv'
-dotenv.config();
 
 const app = express();
-const port = process.env.PORT || 3000;
-
+const port = config.PORT;
 
 app.get('/', function (req, res) {
     res.status(200).send("<h1>API</h1>");

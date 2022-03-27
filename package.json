@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build": "babel src -d dist",
-    "start": "babel-node src/index.js",
+    "start": "nodemon --exec babel-node src/index.js",
     "clean": "rimraf dist",
     "cleanFiles": "rimraf uploads"
   },
@@ -35,5 +35,8 @@
     "rimraf": "^3.0.2",
     "roundround": "^0.2.0",
     "router": "^1.3.6"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.15"
   }
 }
