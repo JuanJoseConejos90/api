@@ -95,7 +95,7 @@ async function getTask(req, res) {
 async function getTaskId(req, res) {
     let conn;
     try {
-        let id = req.params.taskId;
+        let id = req.params.Id;
         let next = roundround(clusterNumber);
         conn = await cluster.getConnection(next());
         const rows = await conn.query("CALL sp_getTaskId(" + id + ")");
@@ -134,7 +134,7 @@ async function updateTask(req, res) {
 
         var next = roundround(clusterNumber);
         conn = await cluster.getConnection(next());
-        var query = `CALL sp_updateTask('${req.body.Id}','${req.body.name}','${req.body.description}',${req.body.state})`;
+        var query = `CALL sp_updateTask('${req.body.Id}','${req.body.name}','${req.body.description}','${req.body.state}')`;
         const rows = await conn.query(query);
         if (rows.affectedRows === 0 || rows.affectedRows >= 1)
             return res.status(201).json({ code: 0, response: true });

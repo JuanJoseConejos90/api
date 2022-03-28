@@ -4,7 +4,6 @@ var router = express.Router();
 import bd from "../DB/db";
 import middleware from "../utils/middleware";
 
-
 //user ROUTER
 router.post("/users/signUp", function (req, res) {
     bd.signUp(req, res);
@@ -23,7 +22,7 @@ router.get("/task/getTask/:Id", function (req, res) {
     bd.getTaskId(req, res);
 });
 
-router.post("/task/CreateTask", middleware.verifyToken, function (req, res) {
+router.post("/task/createTask", middleware.verifyToken, function (req, res) {
     bd.createTask(req, res);
 });
 
